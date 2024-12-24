@@ -23,10 +23,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build and Checkout Successful!'
+            echo 'Build and Checkout Successful!'
         }
         failure {
-            echo '❌ Build or Checkout Failed. Check the logs.'
+            echo 'Build or Checkout Failed. Check the logs.'
         }
     }
 }
