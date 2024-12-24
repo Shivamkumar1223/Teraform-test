@@ -2,17 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                echo 'Checking out the source code...'
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']], // Replace 'main' with your default branch
-                    userRemoteConfigs: [[url: 'https://github.com/Shivamkumar1223/Teraform-test.git']]
-                ])
+                echo 'Checking out source code...'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Verify Jenkinsfile') {
+            steps {
+                echo 'Verifying Jenkinsfile exists...'
+                sh '''
+                    cd /tmp
+                    rm -rf test-repo
+                    git clone https://github.com/Shivamkumar1223/Teraform-test.git test-repo
+                    cd test-repo
+                    ls -l Jenkinsfile
+                '''
+            }
+        }
+
+        stage('Build Application') {
             steps {
                 echo 'Building the application...'
                 sh 'npm install'
@@ -23,10 +33,10 @@ pipeline {
 
     post {
         success {
-            echo 'Build and Checkout Successful!'
+            echo 'Pipeline executed successfully!'
         }
         failure {
-            echo 'Build or Checkout Failed. Check the logs.'
+            echo 'Pipeline failed. Check logs for details.'
         }
     }
 }
